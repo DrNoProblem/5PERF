@@ -1,14 +1,15 @@
 import config from "config";
-import PostgreSQL from "pg";
+import PostgreSQL, { Pool } from "pg";
 import { WeatherData, WeatherDataSchema } from "./dto.js";
 
 const poolConfig = config.get<PostgreSQL.PoolConfig>("database");
 
 export class WeatherDataRepository {
-  private pool: PostgreSQL.Pool;
+  private pool: Pool;
 
   constructor() {
-    this.pool = new PostgreSQL.Pool(poolConfig);
+    const poolConfig = config.get('database');
+    this.pool = new Pool(poolConfig!);
   }
 
   async createTable(): Promise<void> {
@@ -19,10 +20,13 @@ export class WeatherDataRepository {
                 temperature DECIMAL,
                 humidity DECIMAL,
                 PRIMARY KEY(location, date)
-            )
+            );
+            CREATE INDEX IF NOT EXISTS idx_location ON weather(location);
+            CREATE INDEX IF NOT EXISTS idx_date ON weather(date);
         `;
     await this.pool.query(query);
   }
+  
 
   async insertWeatherData(weatherData: WeatherData): Promise<void> {
     const query = `

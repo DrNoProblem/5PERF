@@ -3,8 +3,11 @@ api:
   logFormat: 'tiny'
 logLevel: 'info'
 database:
-  user: toBeDefinedAtDeployTime
-  host: toBeDefinedAtDeployTime
-  database: toBeDefinedAtDeployTime
-  password: toBeDefinedAtDeployTime
-  port: 5432
+  user: ${DB_USER}
+  host: ${DB_HOST}
+  database: ${DB_NAME}
+  password: ${DB_PASSWORD}
+  port: ${DB_PORT}
+  max: ${DB_MAX_CONNECTIONS}
+  idleTimeoutMillis: ${DB_IDLE_TIMEOUT}
+  connectionTimeoutMillis: ${DB_CONN_TIMEOUT}
